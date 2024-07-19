@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Research Paper Summarizer</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <h1>AI Research Paper Summarizer</h1>
+    <form id="upload-form">
+        <input type="file" id="paper-file" accept=".txt,.pdf" required>
+        <select id="model-choice">
+            <option value="bart">BART</option>
+            <option value="llama">LLaMA2 8B</option>
+        </select>
+        <button type="submit">Summarize</button>
+    </form>
+    <div id="summary-output"></div>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = document.getElementById('paper-file').files[0];
+            const modelChoice = document.getElementById('model-choice').value;
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('model', modelChoice);
+
+            try {
+                const response = await axios.post('/summarize', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                document.getElementById('summary-output').innerHTML = `<h2>Summary (${modelChoice.toUpperCase()}):</h2><p>${response.data.summary}</p>`;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('summary-output').innerHTML = `<p>Error: ${error.response.data.error}</p>`;
+            }
+        });
+    </script>
+</body>
+
+</html>

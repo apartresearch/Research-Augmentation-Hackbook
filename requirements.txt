@@ -1,0 +1,7 @@
+flask
+transformers
+torch
+sentencepiece
+accelerate
+bitsandbytes
+chardet
